@@ -36,7 +36,7 @@ namespace NetCore.Crud.Web.Controllers
                 {
                     var user = new User
                     {
-                        Code = $"USR-{DateTime.Now:yyyyMMdd}",
+                        Code = $"USER-{DateTime.Now:yyyyMMdd}",
                         Name = registerDto.Name,
                         UserName = registerDto.Username
                     };

@@ -4,7 +4,7 @@ using NetCore.Crud.Web.Models;
 
 namespace NetCore.Crud.Web.Data
 {
-    public class Context : IdentityDbContext<User>
+    public class Context : IdentityDbContext<User, Role, int>
     {
         public Context(DbContextOptions options) : base(options)
         {
@@ -23,6 +23,11 @@ namespace NetCore.Crud.Web.Data
                 entity.HasKey(a => a.Id);
                 entity.Property(a => a.Code).HasMaxLength(100);
                 entity.Property(a => a.Name).HasMaxLength(250);
+            });
+
+            modelBuilder.Entity<Role>(entity =>
+            {
+                entity.Property(a => a.Code).HasMaxLength(100);
             });
 
             modelBuilder.Entity<User>(entity =>

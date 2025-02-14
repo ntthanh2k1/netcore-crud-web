@@ -15,7 +15,7 @@ namespace NetCore.Crud.Web
             builder.Services.AddControllersWithViews();
             builder.Services.AddDbContext<Context>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("SqlServerConnection")));
-            builder.Services.AddIdentity<User, IdentityRole>(options =>
+            builder.Services.AddIdentity<User, Role>(options =>
             {
                 options.Password.RequiredUniqueChars = 0;
                 options.Password.RequireNonAlphanumeric = false;

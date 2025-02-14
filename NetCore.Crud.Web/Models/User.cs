@@ -2,7 +2,7 @@
 
 namespace NetCore.Crud.Web.Models
 {
-    public class User : IdentityUser
+    public class User : IdentityUser<int>
     {
         public string Code { get; set; }
         public string Name { get; set; }
