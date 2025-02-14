@@ -26,6 +26,7 @@ namespace NetCore.Crud.Web.Controllers
             _userManager = userManager;
         }
 
+        #region Get all assignments
         [HttpGet]
         public async Task<IActionResult> GetAllAssignments()
         {
@@ -40,40 +41,6 @@ namespace NetCore.Crud.Web.Controllers
 
             return View(assignments);
         }
-
-        //[HttpGet]
-        //public async Task<IActionResult> CreateAssignment()
-        //{
-        //    var model = new CreateAssignmentDto
-        //    {
-        //        Users = await _context.Users.Select(a => new SelectListItem
-        //        {
-        //            Value = a.Id,
-        //            Text = a.Name
-        //        }).ToListAsync()
-        //    };
-        //    return View(model);
-        //}
-
-        //[HttpPost]
-        //public Task<IActionResult> CreateAssignment(CreateAssignmentDto createAssignmentDto)
-        //{
-        //    try
-        //    {
-        //        if (ModelState.IsValid)
-        //        {
-                    
-        //        }
-        //        return View();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError(ex, "An error occurred in the CreateAssignment module.");
-
-        //        // Show a user-friendly error message
-        //        ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again later.");
-        //        return View(createAssignmentDto);
-        //    }
-        //}
+        #endregion
     }
 }

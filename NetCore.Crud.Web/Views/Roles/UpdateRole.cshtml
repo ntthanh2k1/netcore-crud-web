@@ -1,21 +1,27 @@
-﻿@model NetCore.Crud.Web.Dtos.RoleDtos.CreateRoleDto;
+﻿@model NetCore.Crud.Web.Dtos.RoleDtos.UpdateRoleDto
 
 @{
-    ViewData["Title"] = "Create Role";
+    ViewData["Title"] = "Update Role";
 }
 
-<h1>Create Role</h1>
+<h1>Update Role</h1>
 
 <h4>Role</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="CreateRole">
+        <form asp-action="UpdateRole">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Code" class="control-label"></label>
+                <input asp-for="Code" class="form-control" readonly />
+                <span asp-validation-for="Code" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger">@ViewBag.Message</span>
+                <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
@@ -23,7 +29,7 @@
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-success" />
+                <input type="submit" value="Save" class="btn btn-primary" />
                 <a asp-action="GetAllRoles" class="btn btn-outline-primary">Back to List</a>
             </div>
         </form>

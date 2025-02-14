@@ -25,6 +25,7 @@ namespace NetCore.Crud.Web.Controllers
             _roleManager = roleManager;
         }
 
+        #region Get all roles
         [HttpGet]
         public async Task<IActionResult> GetAllRoles()
         {
@@ -38,7 +39,38 @@ namespace NetCore.Crud.Web.Controllers
 
             return View(roles);
         }
+        #endregion
 
+        #region Get role by id
+        [HttpGet]
+        public async Task<IActionResult> GetRoleById(int? id)
+        {
+            if (id == null)
+            {
+                return RedirectToAction("GetAllRoles", "Roles");
+            }
+
+            var roles = await _context.Roles
+                .Select(a => new GetRoleByIdDto
+                {
+                    Id = a.Id,
+                    Code = a.Code,
+                    Name = a.Name!,
+                    Description= a.Description
+                })
+                .AsNoTracking()
+                .FirstOrDefaultAsync(b => b.Id == id);
+
+            if (roles == null)
+            {
+                return RedirectToAction("GetAllRoles", "Roles");
+            }
+
+            return View(roles);
+        }
+        #endregion
+
+        #region Create role
         [HttpGet]
         public IActionResult CreateRole()
         {
@@ -74,7 +106,7 @@ namespace NetCore.Crud.Web.Controllers
                         return RedirectToAction("GetAllRoles", "Roles");
                     }
                 }
-                
+
                 return View(createRoleDto);
             }
             catch (Exception ex)
@@ -86,7 +118,99 @@ namespace NetCore.Crud.Web.Controllers
                 return View(createRoleDto);
             }
         }
+        #endregion
 
+        #region Update role
+        [HttpGet]
+        public async Task <IActionResult> UpdateRole(int? id)
+        {
+            if (id == null)
+            {
+                return RedirectToAction("GetAllRoles", "Roles");
+            }
 
+            var roles = await _context.Roles
+                .Select(a => new UpdateRoleDto
+                {
+                    Id = a.Id,
+                    Code = a.Code,
+                    Name = a.Name!,
+                    Description = a.Description
+                })
+                .AsNoTracking()
+                .FirstOrDefaultAsync(b => b.Id == id);
+
+            if (roles == null)
+            {
+                return RedirectToAction("GetAllRoles", "Roles");
+            }
+
+            return View(roles);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateRole(int id, UpdateRoleDto updateRoleDto)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    if (id != updateRoleDto.Id)
+                    {
+                        return RedirectToAction("GetAllRoles", "Roles");
+                    }
+
+                    var role = await _roleManager.FindByIdAsync(id.ToString());
+
+                    if (role == null)
+                    {
+                        return View(updateRoleDto);
+                    }
+
+                    role.Name = updateRoleDto.Name;
+                    role.Description = updateRoleDto.Description;
+                    var result = await _roleManager.UpdateAsync(role);
+
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("GetAllRoles", "Roles");
+                    }
+                }
+
+                return View(updateRoleDto);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred in the UpdateRole module.");
+
+                // Show a user-friendly error message
+                ModelState.AddModelError(string.Empty, "An unexpected error occurred. Please try again later.");
+                return View(updateRoleDto);
+            }
+        }
+        #endregion
+
+        #region Delete role
+        [HttpGet]
+        public async Task<IActionResult> DeleteRole(int id)
+        {
+            var role = await _roleManager.FindByIdAsync(id.ToString());
+
+            if (role == null)
+            {
+                return RedirectToAction("GetAllRoles", "Roles");
+            }
+
+            var result = await _roleManager.DeleteAsync(role);
+
+            if (result.Succeeded)
+            {
+                return RedirectToAction("GetAllRoles", "Roles");
+            }
+
+            return RedirectToAction("GetAllRoles", "Roles");
+        }
+        #endregion
     }
 }
