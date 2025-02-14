@@ -34,9 +34,17 @@ namespace NetCore.Crud.Web.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    var userExists = await _userManager.FindByNameAsync(registerDto.Username);
+
+                    if (userExists != null)
+                    {
+                        ViewBag.Message = $"User {registerDto.Username} already exists.";
+                        return View(registerDto);
+                    }
+
                     var user = new User
                     {
-                        Code = $"USER-{DateTime.Now:yyyyMMdd}",
+                        Code = $"USER-{DateTime.Now:yyyyMMddHHmmss}",
                         Name = registerDto.Name,
                         UserName = registerDto.Username
                     };
@@ -73,6 +81,14 @@ namespace NetCore.Crud.Web.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    var userExists = await _userManager.FindByNameAsync(loginDto.Username);
+
+                    if (userExists == null)
+                    {
+                        ViewBag.Message = $"User {loginDto.Username} does not exist.";
+                        return View(loginDto);
+                    }
+
                     var user = await _signInManager.PasswordSignInAsync(loginDto.Username, loginDto.Password, loginDto.RememberMe, lockoutOnFailure: false);
 
                     if (user.Succeeded)
@@ -99,7 +115,6 @@ namespace NetCore.Crud.Web.Controllers
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
-
 
         [HttpGet]
         public IActionResult AccessDenied()

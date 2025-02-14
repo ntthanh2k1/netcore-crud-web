@@ -9,7 +9,7 @@ using NetCore.Crud.Web.Models;
 
 namespace NetCore.Crud.Web.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "admin")]
     public class RolesController : Controller
     {
         private readonly Context _context;
@@ -33,7 +33,7 @@ namespace NetCore.Crud.Web.Controllers
                 {
                     Id = a.Id,
                     Code = a.Code,
-                    Name = a.Name
+                    Name = a.Name!
                 }).ToListAsync();
 
             return View(roles);
@@ -57,13 +57,13 @@ namespace NetCore.Crud.Web.Controllers
 
                     if (roleExists)
                     {
-                        ViewBag.Message = $"Role \"{createRoleDto.Name}\" already exists.";
+                        ViewBag.Message = $"Role {createRoleDto.Name} already exists.";
                         return View(createRoleDto);
                     }
 
                     var role = new Role
                     {
-                        Code = $"ROLE-{DateTime.Now:yyyyMMdd}",
+                        Code = $"ROLE-{DateTime.Now:yyyyMMddHHmmss}",
                         Name = createRoleDto.Name,
                         Description = createRoleDto.Description
                     };
