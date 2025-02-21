@@ -25,12 +25,7 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Assignments" asp-action="GetAllAssignments">Assignments</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Roles" asp-action="GetAllRoles">Roles</a>
-                        </li>
+                        <partial name="_NavbarPartial" />
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
