@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NetCore.Crud.Web.Data;
-using NetCore.Crud.Web.Dtos.AuthDtos;
 using NetCore.Crud.Web.Dtos.RoleDtos;
 using NetCore.Crud.Web.Models;
 
