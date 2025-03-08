@@ -32,28 +32,30 @@ namespace NetCore.Crud.Web.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
+                if (!ModelState.IsValid)
                 {
-                    var userExists = await _userManager.FindByNameAsync(registerDto.Username);
+                    return View(registerDto);
+                }
 
-                    if (userExists != null)
-                    {
-                        ViewBag.Message = $"User {registerDto.Username} already exists.";
-                        return View(registerDto);
-                    }
+                var userExists = await _userManager.FindByNameAsync(registerDto.Username);
 
-                    var user = new User
-                    {
-                        Code = $"USER-{DateTime.Now:yyyyMMddHHmmss}",
-                        Name = registerDto.Name,
-                        UserName = registerDto.Username
-                    };
-                    var result = await _userManager.CreateAsync(user, registerDto.Password);
+                if (userExists != null)
+                {
+                    ViewBag.Message = $"User {registerDto.Username} already exists.";
+                    return View(registerDto);
+                }
 
-                    if (result.Succeeded)
-                    {
-                        return RedirectToAction("Login", "Auth");
-                    }
+                var user = new User
+                {
+                    Code = $"USER-{DateTime.Now:yyyyMMddHHmmss}",
+                    Name = registerDto.Name,
+                    UserName = registerDto.Username
+                };
+                var result = await _userManager.CreateAsync(user, registerDto.Password);
+
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Login", "Auth");
                 }
 
                 return View(registerDto);
@@ -79,22 +81,24 @@ namespace NetCore.Crud.Web.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
+                if (!ModelState.IsValid)
                 {
-                    var userExists = await _userManager.FindByNameAsync(loginDto.Username);
+                    return View(loginDto);
+                }
 
-                    if (userExists == null)
-                    {
-                        ViewBag.Message = $"User {loginDto.Username} does not exist.";
-                        return View(loginDto);
-                    }
+                var userExists = await _userManager.FindByNameAsync(loginDto.Username);
 
-                    var user = await _signInManager.PasswordSignInAsync(loginDto.Username, loginDto.Password, loginDto.RememberMe, lockoutOnFailure: false);
+                if (userExists == null)
+                {
+                    ViewBag.Message = $"User {loginDto.Username} does not exist.";
+                    return View(loginDto);
+                }
 
-                    if (user.Succeeded)
-                    {
-                        return RedirectToAction("Index", "Home");
-                    }
+                var user = await _signInManager.PasswordSignInAsync(loginDto.Username, loginDto.Password, loginDto.RememberMe, lockoutOnFailure: false);
+
+                if (user.Succeeded)
+                {
+                    return RedirectToAction("Index", "Home");
                 }
 
                 return View(loginDto);

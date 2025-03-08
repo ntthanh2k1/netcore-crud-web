@@ -82,28 +82,30 @@ namespace NetCore.Crud.Web.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
+                if (!ModelState.IsValid)
                 {
-                    var roleExists = await _roleManager.RoleExistsAsync(createRoleDto.Name);
+                    return View(createRoleDto);
+                }
 
-                    if (roleExists)
-                    {
-                        ViewBag.Message = $"Role {createRoleDto.Name} already exists.";
-                        return View(createRoleDto);
-                    }
+                var roleExists = await _roleManager.RoleExistsAsync(createRoleDto.Name);
 
-                    var role = new Role
-                    {
-                        Code = $"ROLE-{DateTime.Now:yyyyMMddHHmmss}",
-                        Name = createRoleDto.Name,
-                        Description = createRoleDto.Description
-                    };
-                    var result = await _roleManager.CreateAsync(role);
+                if (roleExists)
+                {
+                    ViewBag.Message = $"Role {createRoleDto.Name} already exists.";
+                    return View(createRoleDto);
+                }
 
-                    if (result.Succeeded)
-                    {
-                        return RedirectToAction("GetAllRoles", "Roles");
-                    }
+                var role = new Role
+                {
+                    Code = $"ROLE-{DateTime.Now:yyyyMMddHHmmss}",
+                    Name = createRoleDto.Name,
+                    Description = createRoleDto.Description
+                };
+                var result = await _roleManager.CreateAsync(role);
+
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("GetAllRoles", "Roles");
                 }
 
                 return View(createRoleDto);
@@ -153,28 +155,30 @@ namespace NetCore.Crud.Web.Controllers
         {
             try
             {
-                if (ModelState.IsValid)
+                if (!ModelState.IsValid)
                 {
-                    if (id != updateRoleDto.Id)
-                    {
-                        return RedirectToAction("GetAllRoles", "Roles");
-                    }
+                    return View(updateRoleDto);
+                }
 
-                    var role = await _roleManager.FindByIdAsync(id.ToString());
+                if (id != updateRoleDto.Id)
+                {
+                    return RedirectToAction("GetAllRoles", "Roles");
+                }
 
-                    if (role == null)
-                    {
-                        return View(updateRoleDto);
-                    }
+                var role = await _roleManager.FindByIdAsync(id.ToString());
 
-                    role.Name = updateRoleDto.Name;
-                    role.Description = updateRoleDto.Description;
-                    var result = await _roleManager.UpdateAsync(role);
+                if (role == null)
+                {
+                    return View(updateRoleDto);
+                }
 
-                    if (result.Succeeded)
-                    {
-                        return RedirectToAction("GetAllRoles", "Roles");
-                    }
+                role.Name = updateRoleDto.Name;
+                role.Description = updateRoleDto.Description;
+                var result = await _roleManager.UpdateAsync(role);
+
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("GetAllRoles", "Roles");
                 }
 
                 return View(updateRoleDto);
@@ -202,11 +206,6 @@ namespace NetCore.Crud.Web.Controllers
             }
 
             var result = await _roleManager.DeleteAsync(role);
-
-            if (result.Succeeded)
-            {
-                return RedirectToAction("GetAllRoles", "Roles");
-            }
 
             return RedirectToAction("GetAllRoles", "Roles");
         }
